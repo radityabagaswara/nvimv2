@@ -21,7 +21,7 @@ keymap.set("n", "<Leader>e", ":NvimTreeToggle<Return>", opts)
 keymap.set("n", "<Leader>fe", ":NvimTreeFocus<Return>", opts)
 
 -- Tabs
-keymap.set("n", "te", ":tabedit")
+keymap.set("n", "te", ":tabedit<Return>")
 keymap.set("n", "<tab>", ":tabnext<Return>", opts)
 keymap.set("n", "<s-tab>", ":tabprev<Return>", opts)
 keymap.set("n", "tw", ":tabclose<Return>", opts)
@@ -46,4 +46,6 @@ keymap.set("n", "<C-w><down>", "<C-w>-")
 keymap.set("n", "<C-j>", function()
   vim.diagnostic.goto_next()
 end, opts)
-
+keymap.set("n", "<S-j>", function()
+  vim.diagnostic.goto_prev()
+end, opts)
