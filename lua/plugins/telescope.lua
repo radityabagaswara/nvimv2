@@ -98,6 +98,9 @@ return {
         n = {
           ["<tab>"] = actions.select_tab,
         },
+        i = {
+          ["<tab>"] = actions.select_tab,
+        },
       },
     })
     opts.pickers = {
