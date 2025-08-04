@@ -1,12 +1,13 @@
 {
   "extras": [
     "lazyvim.plugins.extras.coding.nvim-cmp",
-    "lazyvim.plugins.extras.dap.core"
+    "lazyvim.plugins.extras.dap.core",
+    "lazyvim.plugins.extras.lang.go"
   ],
   "install_version": 8,
   "news": {
     "NEWS.md": "10960",
-    "doc/news.txt": "24170"
+    "doc/news.txt": "24841"
   },
   "version": 8
 }

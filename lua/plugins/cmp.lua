@@ -21,6 +21,7 @@ return {
     event = "LazyFile",
     dependencies = {
       { "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
+
       -- { "folke/eodev.nvim", opts = {} },
       "mason.nvim",
       "williamboman/mason-lspconfig.nvim",
@@ -246,7 +247,17 @@ return {
   { "hrsh7th/cmp-emoji" },
   {
     "nvim-cmp",
-    dependencies = { "hrsh7th/cmp-emoji" },
+    dependencies = {
+      "hrsh7th/cmp-emoji",
+      {
+        "tzachar/cmp-tabnine",
+        build = "./install.sh",
+        config = function()
+          require("cmp_tabnine.config"):setup({})
+        end,
+      },
+    },
+
     opts = function(_, opts)
       table.insert(opts.sources, { name = "emoji" })
     end,

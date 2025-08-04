@@ -93,6 +93,17 @@ return {
       layout_strategy = "horizontal",
       layout_config = { prompt_position = "top" },
       sorting_strategy = "ascending",
+      file_ignore_patterns = {
+        ".git/",
+        "node_modules/",
+        "vendor/",
+        "%.lock",
+        "%.png",
+        "%.jpg",
+        "%.jpeg",
+        "%.gif",
+        "%.svg",
+      },
       winblend = 0,
       mappings = {
         n = {
