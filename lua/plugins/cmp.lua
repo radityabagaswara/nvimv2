@@ -2,7 +2,7 @@ return {
   -- tools
   { "stevearc/dressing.nvim", opts = {}, event = "VeryLazy" },
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     opts = function(_, opts)
       vim.list_extend(opts.ensure_installed, {
         "luacheck",
@@ -24,7 +24,7 @@ return {
 
       -- { "folke/eodev.nvim", opts = {} },
       "mason.nvim",
-      "williamboman/mason-lspconfig.nvim",
+      "mason-org/mason-lspconfig.nvim",
     },
     ---@class PluginLspOpts
     opts = {
@@ -33,14 +33,7 @@ return {
       diagnostics = {
         underline = true,
         update_in_insert = false,
-        virtual_text = {
-          spacing = 4,
-          source = "if_many",
-          prefix = "●",
-          -- this will set set the prefix to a function that returns the diagnostics icon based on the severity
-          -- this only works on a recent 0.10.0 build. Will be set to "●" when not supported
-          -- prefix = "icons",
-        },
+        virtual_text = false, -- Disabled in favor of tiny-inline-diagnostic.nvim
         severity_sort = true,
         signs = {
           text = {
@@ -123,19 +116,10 @@ return {
       LazyVim.format.register(LazyVim.lsp.formatter())
 
       -- setup keymaps
-      LazyVim.lsp.on_attach(function(client, buffer)
-        require("lazyvim.plugins.lsp.keymaps").on_attach(client, buffer)
-      end)
-
-      local register_capability = vim.lsp.handlers["client/registerCapability"]
-
-      vim.lsp.handlers["client/registerCapability"] = function(err, res, ctx)
-        ---@diagnostic disable-next-line: no-unknown
-        local ret = register_capability(err, res, ctx)
-        local client = vim.lsp.get_client_by_id(ctx.client_id)
-        local buffer = vim.api.nvim_get_current_buf()
-        require("lazyvim.plugins.lsp.keymaps").on_attach(client, buffer)
-        return ret
+      for server, server_opts in pairs(opts.servers) do
+        if server ~= "*" and type(server_opts) == "table" and server_opts.keys then
+          require("lazyvim.plugins.lsp.keymaps").set({ name = server }, server_opts.keys)
+        end
       end
 
       -- diagnostics signs
@@ -149,24 +133,21 @@ return {
 
       -- inlay hints
       if opts.inlay_hints.enabled then
-        LazyVim.lsp.on_attach(function(client, buffer)
-          if client.supports_method("textDocument/inlayHint") then
-            Snacks.toggle.inlay_hints(buffer)
+        Snacks.util.lsp.on({ method = "textDocument/inlayHint" }, function(buffer)
+          if vim.api.nvim_buf_is_valid(buffer) and vim.bo[buffer].buftype == "" then
+            vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
           end
         end)
       end
 
       -- code lens
       if opts.codelens.enabled and vim.lsp.codelens then
-        LazyVim.lsp.on_attach(function(client, buffer)
-          if client.supports_method("textDocument/codeLens") then
-            vim.lsp.codelens.refresh()
-            --- autocmd BufEnter,CursorHold,InsertLeave <buffer> lua vim.lsp.codelens.refresh()
-            vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
-              buffer = buffer,
-              callback = vim.lsp.codelens.refresh,
-            })
-          end
+        Snacks.util.lsp.on({ method = "textDocument/codeLens" }, function(buffer)
+          vim.lsp.codelens.refresh()
+          vim.api.nvim_create_autocmd({ "BufEnter", "CursorHold", "InsertLeave" }, {
+            buffer = buffer,
+            callback = vim.lsp.codelens.refresh,
+          })
         end)
       end
 
@@ -215,12 +196,12 @@ return {
       local have_mason, mlsp = pcall(require, "mason-lspconfig")
       local all_mslp_servers = {}
       if have_mason then
-        all_mslp_servers = vim.tbl_keys(require("mason-lspconfig.mappings.server").lspconfig_to_package)
+        all_mslp_servers = require("mason-lspconfig").get_available_servers()
       end
 
       local ensure_installed = {} ---@type string[]
       for server, server_opts in pairs(servers) do
-        if server_opts then
+        if server ~= "*" and server_opts then
           server_opts = server_opts == true and {} or server_opts
           -- run manual setup if mason=false or if this is a server that cannot be installed with mason-lspconfig
           if server_opts.mason == false or not vim.tbl_contains(all_mslp_servers, server) then
@@ -233,14 +214,6 @@ return {
 
       if have_mason then
         mlsp.setup({ ensure_installed = ensure_installed, handlers = { setup } })
-      end
-
-      if LazyVim.lsp.get_config("denols") and LazyVim.lsp.get_config("tsserver") then
-        local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
-        LazyVim.lsp.disable("tsserver", is_deno)
-        LazyVim.lsp.disable("denols", function(root_dir)
-          return not is_deno(root_dir)
-        end)
       end
     end,
   },

@@ -26,6 +26,10 @@ require("lazy").setup({
           lazyvim = true,
           neovim = true,
         },
+        -- 🔑 disable LazyVim trying to pull bufferline highlights with `.get`
+        highlights = function()
+          return {}
+        end,
       },
     },
     -- { import = "lazyvim.plugins.extras.linting.eslint" },

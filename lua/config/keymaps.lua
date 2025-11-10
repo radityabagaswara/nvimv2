@@ -47,10 +47,14 @@ keymap.set("n", "J", "}")
 keymap.set("n", "KK", "{")
 keymap.set("i", "jk", "<ESC>")
 
+keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+
+keymap.set("n", "<C-;>", ":HopWord<Return>", opts)
+
 -- Diagnostics
 keymap.set("n", "<C-j>", function()
-  vim.diagnostic.goto_next()
+  vim.diagnostic.get_next()()
 end, opts)
 keymap.set("n", "<S-j>", function()
-  vim.diagnostic.goto_prev()
+  vim.diagnostic.get_prev()()
 end, opts)
