@@ -48,6 +48,8 @@ keymap.set("n", "KK", "{")
 keymap.set("i", "jk", "<ESC>")
 
 keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
+keymap.set("n", "gd", vim.lsp.buf.references, opts)
+keymap.set("n", "<Leader>c", ":cclose<Return>:lclose<Return>", opts)
 
 keymap.set("n", "<C-;>", ":HopWord<Return>", opts)
 
@@ -57,4 +59,14 @@ keymap.set("n", "<C-j>", function()
 end, opts)
 keymap.set("n", "<S-j>", function()
   vim.diagnostic.get_prev()()
+end, opts)
+
+keymap.set("n", "<Leader>cy", function()
+  local err = vim.diagnostic.get_next()
+  if err and err.message then
+    vim.fn.setreg("+", err.message)
+    vim.notify("Copied error: " .. err.message, vim.log.levels.INFO)
+  else
+    vim.notify("No diagnostic to copy", vim.log.levels.WARN)
+  end
 end, opts)
