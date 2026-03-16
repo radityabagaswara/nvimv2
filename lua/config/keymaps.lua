@@ -45,6 +45,12 @@ keymap.set("n", "H", "^")
 keymap.set("n", "L", "$")
 keymap.set("n", "J", "}")
 keymap.set("n", "KK", "{")
+
+keymap.set("v", "H", "^")
+keymap.set("v", "L", "$")
+keymap.set("v", "J", "}")
+keymap.set("v", "KK", "{")
+
 keymap.set("i", "jk", "<ESC>")
 
 keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
@@ -52,6 +58,7 @@ keymap.set("n", "gd", vim.lsp.buf.references, opts)
 keymap.set("n", "<Leader>c", ":cclose<Return>:lclose<Return>", opts)
 
 keymap.set("n", "<C-;>", ":HopWord<Return>", opts)
+keymap.set("n", ";g", ":lua local line=tonumber(vim.fn.input('Go to line: ')); if line then vim.cmd(':'..line) end<CR>")
 
 -- Diagnostics
 keymap.set("n", "<C-j>", function()
@@ -70,3 +77,13 @@ keymap.set("n", "<Leader>cy", function()
     vim.notify("No diagnostic to copy", vim.log.levels.WARN)
   end
 end, opts)
+
+-- Terminal Toggle Fix
+local function toggle_terminal()
+  Snacks.terminal.toggle()
+end
+
+-- Map for both Normal and Terminal modes
+vim.keymap.set({ "n", "t" }, "<C-/>", toggle_terminal, { desc = "Toggle Terminal" })
+vim.keymap.set({ "n", "t" }, "<C-_>", toggle_terminal, { desc = "which_key_ignore" })
+vim.keymap.set("n", "<Leader>b", ":BlameToggle<Return>")

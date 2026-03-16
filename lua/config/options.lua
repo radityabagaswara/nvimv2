@@ -32,3 +32,13 @@ vim.opt.splitkeep = "cursor"
 vim.opt.mouse = ""
 
 vim.opt.formatoptions:append({ "r" })
+
+vim.opt.guifont = "JetBrainsMono Nerd Font:h14"
+-- Autoread ensures Neovim updates when Gemini-CLI saves a file
+vim.opt.autoread = true
+
+-- Refresh buffers when focusing Neovim or moving the cursor
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
+  pattern = "*",
+  command = "checktime",
+})

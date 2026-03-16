@@ -88,7 +88,66 @@ return {
             },
           },
         },
+      },
 
+      -- Inside your lspconfig servers table
+      kotlin_language_server = {
+        -- 1. Optimized Command for JetBrains LSP
+        -- We boost the Heap (Xmx) and Stack (Xss) for deep Maven projects
+        -- We also add the TieredCompilation flag to make the Java process start faster
+        cmd = {
+          "kotlin-language-server",
+          "--jvm-arg=-Xmx4G",
+          "--jvm-arg=-Xms1G",
+          "--jvm-arg=-Xss4M",
+          "--jvm-arg=-XX:+TieredCompilation",
+          "--jvm-arg=-XX:TieredStopAtLevel=1",
+          "--jvm-arg=-Didea.max.intellisense.filesize=2500",
+          "--jvm-arg=-Dkotlin.lsp.skip.index.garbage=true",
+        },
+
+        -- 2. Root Detection
+        -- Ensures it attaches to 'jacs-be' parent folder instead of sub-modules
+        root_dir = function(fname)
+          local util = require("lspconfig.util")
+          return util.root_pattern("settings.gradle", "settings.gradle.kts", "pom.xml", ".git")(fname)
+        end,
+
+        -- 3. LSP Specific Settings
+        settings = {
+          kotlin = {
+            compiler = { jvm = { target = "17" } },
+            indexing = {
+              enabled = true,
+            },
+            externalSources = {
+              useKlsCustomTarget = false, -- Prevents scanning every JAR immediately
+              autoExpand = false,
+            },
+            hints = {
+              typeHints = false, -- Disable for extra speed
+              parameterHints = false,
+            },
+          },
+        },
+
+        -- 4. Life-Cycle Hooks
+        -- This fixes the "Multiple Sessions" lock error you encountered
+        on_exit = function()
+          vim.fn.jobstart("pkill -9 -f kotlin-language-server")
+        end,
+
+        -- 5. File Watcher Filtering (The "Importing" speed-up)
+        -- This tells the LSP to ignore the massive target folder in its watcher
+        on_init = function(client)
+          if client.server_capabilities then
+            client.server_capabilities.workspace = client.server_capabilities.workspace or {}
+            client.server_capabilities.workspace.fileOperations = {
+              didCreate = { filters = { { pattern = { glob = "**/target/**", kind = "file" } } } },
+              didDelete = { filters = { { pattern = { glob = "**/target/**", kind = "file" } } } },
+            }
+          end
+        end,
       },
       -- you can do any additional lsp server setup here
       -- return true if you don't want this server to be setup with lspconfig

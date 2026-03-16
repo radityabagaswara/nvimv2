@@ -32,10 +32,16 @@ return {
         },
         view = {
           width = 30,
-          relativenumber = true,
+          adaptive_size = true,
+          relativenumber = false,
         },
         renderer = {
           group_empty = true,
+          indent_width = 1,
+        },
+        update_focused_file = {
+          enable = true,
+          update_root = true,
         },
         filters = {
           dotfiles = false,

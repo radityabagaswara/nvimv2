@@ -23,12 +23,4 @@ return {
       return opts
     end,
   },
-  {
-    "stevearc/conform.nvim",
-    opts = {
-      formatters_by_ft = {
-        lua = { "stylua" },
-      },
-    },
-  },
 }
