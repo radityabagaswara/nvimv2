@@ -74,29 +74,22 @@ return {
           on_exit = function(_, code)
             if code == 0 then
               print("✅ Syncing LSP...")
-              vim.lsp.buf.execute_command({ command = "kotlin.indexWorkspace" })
+              -- This specifically triggers Kotlin indexing if available
+              pcall(vim.lsp.buf.execute_command, { command = "kotlin.indexWorkspace" })
             end
           end,
         })
       end
 
       -------------------------------------------------------------------------
-      -- KEYMAPS (The Full Set)
+      -- KEYMAPS
       -------------------------------------------------------------------------
-      -- Run & Build
       vim.keymap.set("n", "<leader>Jr", run_maven_service, { desc = "Run Service" })
       vim.keymap.set("n", "<leader>jb", build_and_sync, { desc = "Build & Sync LSP" })
 
-      -- New Generation Tools (Kotlin aware)
-      vim.keymap.set("n", "<leader>Jc", function()
-        create_file("Class")
-      end, { desc = "Create Class" })
-      vim.keymap.set("n", "<leader>Ji", function()
-        create_file("Interface")
-      end, { desc = "Create Interface" })
-      vim.keymap.set("n", "<leader>Je", function()
-        create_file("Enum")
-      end, { desc = "Create Enum" })
+      vim.keymap.set("n", "<leader>Jc", function() create_file("Class") end, { desc = "Create Class" })
+      vim.keymap.set("n", "<leader>Ji", function() create_file("Interface") end, { desc = "Create Interface" })
+      vim.keymap.set("n", "<leader>Je", function() create_file("Enum") end, { desc = "Create Enum" })
     end,
   },
 }

@@ -69,8 +69,8 @@ return {
       ---@type lspconfig.options
       servers = {
         jdtls = {
-          enabled = false,
-          -- Prevent JDTLS from attaching to Kotlin files
+          -- We use the LazyVim java extra which handles nvim-jdtls setup.
+          -- We just need to make sure it doesn't try to attach to kotlin.
           filetypes = { "java" },
         },
         lua_ls = {
