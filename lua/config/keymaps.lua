@@ -62,19 +62,21 @@ keymap.set("n", ";g", ":lua local line=tonumber(vim.fn.input('Go to line: ')); i
 
 -- Diagnostics
 keymap.set("n", "<C-j>", function()
-  vim.diagnostic.get_next()()
+  vim.diagnostic.goto_next()
 end, opts)
 keymap.set("n", "<S-j>", function()
-  vim.diagnostic.get_prev()()
+  vim.diagnostic.goto_prev()
 end, opts)
 
 keymap.set("n", "<Leader>cy", function()
-  local err = vim.diagnostic.get_next()
-  if err and err.message then
+  local line = vim.api.nvim_win_get_cursor(0)[1] - 1
+  local diagnostics = vim.diagnostic.get(0, { lnum = line })
+  if #diagnostics > 0 then
+    local err = diagnostics[1]
     vim.fn.setreg("+", err.message)
     vim.notify("Copied error: " .. err.message, vim.log.levels.INFO)
   else
-    vim.notify("No diagnostic to copy", vim.log.levels.WARN)
+    vim.notify("No diagnostic on current line", vim.log.levels.WARN)
   end
 end, opts)
 

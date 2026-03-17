@@ -1,53 +1,33 @@
 return {
-  -- {
-  --   "neovim/nvim-lspconfig",
-  --   opts = {
-  --     servers = {
-  --       -- We define our own 'kotlin_lsp' to avoid conflict with 'kotlin_language_server'
-  --       kotlin_lsp = {
-  --         mason = false,
-  --         cmd = { "/opt/homebrew/bin/kotlin-lsp", "--stdio" },
-  --         filetypes = { "kotlin" },
-  --         root_dir = function(fname)
-  --           local util = require("lspconfig.util")
-  --           return util.root_pattern(
-  --             "pom.xml",
-  --             "build.gradle",
-  --             "build.gradle.kts",
-  --             "settings.gradle",
-  --             "settings.gradle.kts",
-  --             ".git"
-  --           )(fname)
-  --         end,
-  --         settings = {
-  --           kotlinLSP = {
-  --             -- JetBrains official LSP specific settings
-  --           },
-  --         },
-  --       },
-  --     },
-  --     setup = {
-  --       -- 1. Completely disable the community server
-  --       kotlin_language_server = function()
-  --         return true -- skip setup
-  --       end,
-  --       -- 2. Manually register 'kotlin_lsp' if not in lspconfig
-  --       kotlin_lsp = function(server, opts)
-  --         local configs = require("lspconfig.configs")
-  --         if not configs[server] then
-  --           configs[server] = {
-  --             default_config = {
-  --               cmd = opts.cmd,
-  --               filetypes = opts.filetypes,
-  --               root_dir = opts.root_dir,
-  --               settings = opts.settings,
-  --             },
-  --           }
-  --         end
-  --         -- Standard setup will continue after this function returns false
-  --         return false
-  --       end,
-  --     },
-  --   },
-  -- },
+  {
+    "neovim/nvim-lspconfig",
+    opts = {
+      servers = {
+        -- Use standard name to inherit default lspconfig settings
+        kotlin_language_server = {
+          mason = false,
+          cmd = { vim.fn.expand("~/.local/share/nvim/mason/bin/kotlin-lsp"), "--stdio" },
+          filetypes = { "kotlin" },
+          root_dir = function(fname)
+            return require("lspconfig.util").root_pattern("pom.xml", "build.gradle", ".git")(fname)
+          end,
+          settings = {
+            kotlin = {
+              indexing = {
+                enabled = true
+              }
+            }
+          },
+        },
+      },
+      setup = {
+        -- Force JDTLS to skip non-java files (extra safety)
+        jdtls = function()
+          if vim.bo.filetype ~= "java" then
+            return true
+          end
+        end,
+      },
+    },
+  },
 }
