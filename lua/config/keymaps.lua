@@ -87,3 +87,11 @@ end
 vim.keymap.set({ "n", "t" }, "<C-/>", toggle_terminal, { desc = "Toggle Terminal" })
 vim.keymap.set({ "n", "t" }, "<C-_>", toggle_terminal, { desc = "which_key_ignore" })
 vim.keymap.set("n", "<Leader>b", ":BlameToggle<Return>")
+
+-- Opens the Gemini CLI in a floating terminal, disguised as VS Code
+vim.keymap.set("n", "<leader>ag", function()
+  Snacks.terminal("gemini", {
+    win = { position = "float" },
+    env = { TERM_PROGRAM = "vscode" }, -- This is the magic bypass key
+  })
+end, { desc = "Open Gemini AI IDE" })

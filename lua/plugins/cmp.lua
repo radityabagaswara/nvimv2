@@ -68,6 +68,11 @@ return {
       -- LSP Server Settings
       ---@type lspconfig.options
       servers = {
+        jdtls = {
+          enabled = false,
+          -- Prevent JDTLS from attaching to Kotlin files
+          filetypes = { "java" },
+        },
         lua_ls = {
           -- mason = false, -- set to false if you don't want this server to be installed with mason
           -- Use this to add any additional keymaps
@@ -90,63 +95,29 @@ return {
         },
       },
 
-      -- Inside your lspconfig servers table
+      -- Inside your servers = { ... } block
       kotlin_language_server = {
-        -- 1. Optimized Command for JetBrains LSP
-        -- We boost the Heap (Xmx) and Stack (Xss) for deep Maven projects
-        -- We also add the TieredCompilation flag to make the Java process start faster
-        cmd = {
-          "kotlin-language-server",
-          "--jvm-arg=-Xmx4G",
-          "--jvm-arg=-Xms1G",
-          "--jvm-arg=-Xss4M",
-          "--jvm-arg=-XX:+TieredCompilation",
-          "--jvm-arg=-XX:TieredStopAtLevel=1",
-          "--jvm-arg=-Didea.max.intellisense.filesize=2500",
-          "--jvm-arg=-Dkotlin.lsp.skip.index.garbage=true",
+        -- Keep the command simple, point directly to Mason
+        cmd = { vim.fn.expand("~/.local/share/nvim/mason/bin/kotlin-lsp") },
+
+        -- FORCE the environment variables into the JetBrains private JRE
+        cmd_env = {
+          -- Forces the main LSP engine to use 4GB
+          JAVA_TOOL_OPTIONS = "-Xmx4G -Xss4M",
+          -- Forces the background Maven importer to use 2GB instead of 512MB
+          MAVEN_OPTS = "-Xmx2G",
         },
 
-        -- 2. Root Detection
-        -- Ensures it attaches to 'jacs-be' parent folder instead of sub-modules
+        filetypes = { "kotlin", "kt", "kts" },
+
         root_dir = function(fname)
           local util = require("lspconfig.util")
-          return util.root_pattern("settings.gradle", "settings.gradle.kts", "pom.xml", ".git")(fname)
+          return util.root_pattern("pom.xml", "build.gradle", "build.gradle.kts", ".git")(fname)
         end,
 
-        -- 3. LSP Specific Settings
-        settings = {
-          kotlin = {
-            compiler = { jvm = { target = "17" } },
-            indexing = {
-              enabled = true,
-            },
-            externalSources = {
-              useKlsCustomTarget = false, -- Prevents scanning every JAR immediately
-              autoExpand = false,
-            },
-            hints = {
-              typeHints = false, -- Disable for extra speed
-              parameterHints = false,
-            },
-          },
-        },
-
-        -- 4. Life-Cycle Hooks
-        -- This fixes the "Multiple Sessions" lock error you encountered
         on_exit = function()
-          vim.fn.jobstart("pkill -9 -f kotlin-language-server")
-        end,
-
-        -- 5. File Watcher Filtering (The "Importing" speed-up)
-        -- This tells the LSP to ignore the massive target folder in its watcher
-        on_init = function(client)
-          if client.server_capabilities then
-            client.server_capabilities.workspace = client.server_capabilities.workspace or {}
-            client.server_capabilities.workspace.fileOperations = {
-              didCreate = { filters = { { pattern = { glob = "**/target/**", kind = "file" } } } },
-              didDelete = { filters = { { pattern = { glob = "**/target/**", kind = "file" } } } },
-            }
-          end
+          vim.fn.jobstart("pkill -9 -f kotlin-lsp")
+          vim.fn.jobstart("pkill -9 -f jetbrains.kotlin.lsp")
         end,
       },
       -- you can do any additional lsp server setup here
@@ -288,6 +259,15 @@ return {
         config = function()
           require("cmp_tabnine.config"):setup({})
         end,
+      },
+      opts = {
+        completion = {
+          debounce = 150,
+        },
+        performance = {
+          fetching_timeout = 200,
+          max_view_entries = 15, -- Don't render 100 items at once
+        },
       },
     },
 
