@@ -58,7 +58,7 @@ keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
 keymap.set("n", "gd", vim.lsp.buf.references, opts)
 keymap.set("n", "<Leader>c", ":cclose<Return>:lclose<Return>", opts)
 
-keymap.set("n", "zz", ":HopWord<Return>", opts)
+keymap.set("n", ";z", ":HopWord<Return>", opts)
 keymap.set("n", ";g", ":lua local line=tonumber(vim.fn.input('Go to line: ')); if line then vim.cmd(':'..line) end<CR>")
 
 -- Diagnostics
