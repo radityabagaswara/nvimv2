@@ -87,9 +87,15 @@ return {
       vim.keymap.set("n", "<leader>Jr", run_maven_service, { desc = "Run Service" })
       vim.keymap.set("n", "<leader>jb", build_and_sync, { desc = "Build & Sync LSP" })
 
-      vim.keymap.set("n", "<leader>Jc", function() create_file("Class") end, { desc = "Create Class" })
-      vim.keymap.set("n", "<leader>Ji", function() create_file("Interface") end, { desc = "Create Interface" })
-      vim.keymap.set("n", "<leader>Je", function() create_file("Enum") end, { desc = "Create Enum" })
+      vim.keymap.set("n", "<leader>Jc", function()
+        create_file("Class")
+      end, { desc = "Create Class" })
+      vim.keymap.set("n", "<leader>Ji", function()
+        create_file("Interface")
+      end, { desc = "Create Interface" })
+      vim.keymap.set("n", "<leader>Je", function()
+        create_file("Enum")
+      end, { desc = "Create Enum" })
     end,
   },
 }
