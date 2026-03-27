@@ -44,19 +44,19 @@ keymap.set("n", "<C-w><down>", "<C-w>-")
 keymap.set("n", "H", "^")
 keymap.set("n", "L", "$")
 keymap.set("n", "J", "}")
-keymap.set("n", "KK", "{")
+keymap.set("n", "K", "{")
 
 keymap.set("v", "H", "^")
 keymap.set("v", "L", "$")
 keymap.set("v", "J", "}")
-keymap.set("v", "KK", "{")
+keymap.set("v", "K", "{")
 
 keymap.set("i", "jk", "<ESC>")
 keymap.set("v", "jk", "<ESC>")
 
 keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
 keymap.set("n", "gd", vim.lsp.buf.references, opts)
-keymap.set("n", "<Leader>c", ":cclose<Return>:lclose<Return>", opts)
+keymap.set("n", "<Leader>cc", ":cclose<Return>:lclose<Return>", opts)
 
 keymap.set("n", ";z", ":HopWord<Return>", opts)
 keymap.set("n", ";g", ":lua local line=tonumber(vim.fn.input('Go to line: ')); if line then vim.cmd(':'..line) end<CR>")
