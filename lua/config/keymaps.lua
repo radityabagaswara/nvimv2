@@ -62,12 +62,12 @@ keymap.set("n", ";z", ":HopWord<Return>", opts)
 keymap.set("n", ";g", ":lua local line=tonumber(vim.fn.input('Go to line: ')); if line then vim.cmd(':'..line) end<CR>")
 
 -- Diagnostics
-keymap.set("n", "<C-j>", function()
-  vim.diagnostic.goto_next()
-end, opts)
-keymap.set("n", "<S-j>", function()
-  vim.diagnostic.goto_prev()
-end, opts)
+-- keymap.set("n", "<C-j>", function()
+--   vim.diagnostic.goto_next()
+-- end, opts)
+-- keymap.set("n", "<S-j>", function()
+--   vim.diagnostic.goto_prev()
+-- end, opts)
 
 keymap.set("n", "<Leader>cy", function()
   local line = vim.api.nvim_win_get_cursor(0)[1] - 1

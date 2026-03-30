@@ -26,6 +26,8 @@ return {
     },
     keys = {
       { "<leader>zz", "<cmd>LspInfo<cr>", desc = "Lsp Info" },
+      { "K", false },
+      { "<leader>k", function() return vim.lsp.buf.hover() end, desc = "Hover" },
     },
   },
 }
