@@ -82,6 +82,30 @@ return {
       end,
       desc = "Open File Browser with the path of the current buffer",
     },
+    {
+      ";m",
+      function()
+        local word = vim.fn.expand("<cword>")
+        if word == "" then return end
+
+        require("telescope.builtin").find_files({
+          prompt_title = "Global Source Search: " .. word,
+          find_command = {
+            "fd",
+            word, -- Search specifically for this filename
+            vim.fn.expand("~/Work"), -- Search your Work folder
+            vim.fn.expand("~/.m2/repository"), -- Search your Maven folder
+            "--type", "f",
+            "--extension", "kt",
+            "--extension", "java",
+            "--color", "never",
+            "--hidden",
+            "--no-ignore",
+          },
+        })
+      end,
+      desc = "Global Source Search (Work + Maven)",
+    },
   },
   config = function(_, opts)
     local telescope = require("telescope")

@@ -55,7 +55,8 @@ keymap.set("i", "jk", "<ESC>")
 keymap.set("v", "jk", "<ESC>")
 
 keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
-keymap.set("n", "gd", vim.lsp.buf.references, opts)
+keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+keymap.set("n", "gr", vim.lsp.buf.references, opts)
 keymap.set("n", "<Leader>cc", ":cclose<Return>:lclose<Return>", opts)
 
 keymap.set("n", ";z", ":HopWord<Return>", opts)

@@ -43,3 +43,10 @@ vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
   pattern = "*",
   command = "checktime",
 })
+
+-- Folding
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldlevel = 99 -- Start with everything unfolded
+vim.opt.foldlevelstart = 99
+vim.opt.foldenable = true
