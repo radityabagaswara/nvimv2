@@ -33,7 +33,7 @@ vim.opt.mouse = ""
 
 vim.opt.formatoptions:append({ "r" })
 
-vim.opt.guifont = "JetBrainsMono Nerd Font:h14"
+vim.opt.guifont = "JetBrainsMono Nerd Font:h16"
 vim.opt.conceallevel = 2
 -- Autoread ensures Neovim updates when Gemini-CLI saves a file
 vim.opt.autoread = true

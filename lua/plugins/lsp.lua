@@ -41,6 +41,8 @@ return {
       { "<leader>zz", "<cmd>LspInfo<cr>", desc = "Lsp Info" },
       { "gh", vim.lsp.buf.hover, desc = "Hover" },
       { "<leader>k", vim.lsp.buf.hover, desc = "Hover" },
+      { "<leader>ca", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" } },
+      { "ga", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" } },
       -- We will handle K and gd globally to avoid conflicts
     },
   },
