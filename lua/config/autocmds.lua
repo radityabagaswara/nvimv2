@@ -1,6 +1,6 @@
--- Auto-fold Java and Kotlin imports on open
+-- Auto-fold Kotlin imports on open
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "java", "kotlin" },
+  pattern = { "kotlin" },
   callback = function()
     -- Wait a bit for Treesitter/Folding to initialize
     vim.defer_fn(function()

@@ -97,7 +97,6 @@ return {
             vim.fn.expand("~/.m2/repository"), -- Search your Maven folder
             "--type", "f",
             "--extension", "kt",
-            "--extension", "java",
             "--color", "never",
             "--hidden",
             "--no-ignore",

@@ -25,7 +25,6 @@ vim.opt.tabstop = 2
 vim.opt.wrap = false
 vim.opt.backspace = { "start", "eol", "indent" }
 vim.opt.path:append({ "**" })
-vim.opt.wildignore:append({ "*/node_modules/*" })
 vim.opt.splitbelow = true
 vim.opt.splitright = true
 vim.opt.splitkeep = "cursor"
@@ -50,3 +49,9 @@ vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldlevel = 99 -- Start with everything unfolded
 vim.opt.foldlevelstart = 99
 vim.opt.foldenable = true
+vim.opt.wildignore:append({
+  "*/target/*",
+  "*/.git/*",
+  "*/node_modules/*",
+  "*/.idea/*",
+})

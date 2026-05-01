@@ -4,17 +4,24 @@ return {
     opts = {
       servers = {
         csharp_ls = {},
-        jdtls = {
-          filetypes = { "java" },
-          mason = false,
-        },
+
         kotlin_language_server = {
           mason = false,
-          cmd = { vim.fn.expand("~/.local/share/nvim/mason/bin/kotlin-lsp"), "-J-Xmx2G", "--stdio" },
+          cmd = {
+            vim.fn.expand("~/.local/share/nvim/mason/bin/kotlin-lsp"),
+            "--stdio",
+            "-J-Xmx1g",
+          },
           filetypes = { "kotlin" },
           root_dir = function(fname)
             local util = require("lspconfig.util")
-            return util.root_pattern(".git", "mvnw", "pom.xml", "build.gradle", "build.gradle.kts")(fname)
+
+            local pom = util.root_pattern("pom.xml")(fname)
+            if pom then
+              return pom
+            end
+
+            return util.root_pattern("mvnw", "build.gradle", "build.gradle.kts", ".git")(fname)
           end,
           settings = {
             kotlin = {
@@ -24,26 +31,25 @@ return {
           },
         },
       },
+
       setup = {
         csharp_ls = function(_, opts)
           require("lspconfig").csharp_ls.setup(opts)
           return true
         end,
-        jdtls = function()
-          if vim.bo.filetype ~= "java" then
-            return true
-          end
-          return false
+
+        kotlin_lsp = function(_, opts)
+          require("lspconfig").kotlin_lsp.setup(opts)
+          return true
         end,
       },
     },
+
     keys = {
-      { "<leader>zz", "<cmd>LspInfo<cr>", desc = "Lsp Info" },
       { "gh", vim.lsp.buf.hover, desc = "Hover" },
       { "<leader>k", vim.lsp.buf.hover, desc = "Hover" },
       { "<leader>ca", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" } },
       { "ga", vim.lsp.buf.code_action, desc = "Code Action", mode = { "n", "v" } },
-      -- We will handle K and gd globally to avoid conflicts
     },
   },
 }
