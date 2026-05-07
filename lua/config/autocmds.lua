@@ -1,3 +1,27 @@
+-- Kotlin LSP (JetBrains kotlin-lsp, bypasses lspconfig which lacks its config entry)
+vim.lsp.config("kotlin_lsp", {
+  -- cmd = { vim.fn.expand("~/Work/kotlin-lsp/kotlin-lsp.sh"), "--stdio" },
+  cmd = {
+    vim.fn.expand("~/.dev/kotlin-server-262.4739.0/bin/intellij-server"),
+    "--stdio",
+  },
+  --
+  -- cmd_env = {
+  --   JAVA_TOOL_OPTIONS = table.concat({
+  --     "-Xms128m",
+  --     "-Xmx1g",
+  --     "-XX:+UseG1GC",
+  --     "-XX:CICompilerCount=2",
+  --     "-XX:ActiveProcessorCount=1",
+  --     "-Xss512k",
+  --     "-Didea.properties.file=" .. vim.fn.expand("~/.config/kotlin-lsp/idea.properties"),
+  --   }, " "),
+  -- },
+  filetypes = { "kotlin" },
+  root_markers = { "pom.xml", "build.gradle", "build.gradle.kts", "settings.gradle", "settings.gradle.kts" },
+})
+vim.lsp.enable("kotlin_lsp")
+
 -- Auto-fold Kotlin imports on open
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "kotlin" },
